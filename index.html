@@ -8,34 +8,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="p-3 bg-[#6CD4FF]">
-    <h1 class="text-center font-bold text-4xl font-mono ">Tic Tac Toe</h1>
+<body class="p-2 sm:p-5 bg-[#6CD4FF]">
+  <!-- <div class="flex flex-col h-screen justify-between"> -->
+    <h1 class="text-center font-bold text-3xl font-mono sm:text-4xl">Tic Tac Toe</h1>
 
-    <div class="flex justify-center items-center mt-10">
-        <div class="grid grid-cols-3 gap-1 bg-[#8B80F9] p-2 rounded-sm w-full sm:w-1/2">
+    <div class="flex justify-center items-center">
+        <div class="scale-75 grid grid-cols-3 gap-1 sm:gap-2 bg-[#8B80F9] p-2 rounded-sm w-[75%] sm:w-[35%]">
             <!-- Buttons for the Tic Tac Toe board -->
+             
             <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
             <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
             <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
             <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
             <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
             <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
             <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
             <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-            <button id="box"
-                class="aspect-square bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              <button id="box"
+              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+              
+            
         </div>
     </div>
-    <div class="flex justify-center text-lg font-semibold capitalize mt-10"><p id="result"></p> </div>
-    <div class="flex justify-center mt-16 "><button class="border-[3px] border-black p-1 rounded-md capitalize bg-green-300 font-semibold" id="reset">play again</button></div>
+    <div class="flex justify-center text-base font-semibold capitalize"><p class="font-mono" id="result"></p> </div>
+    <div class="flex justify-center mt-4"><button class="border-[3px] border-black p-1 rounded-md capitalize bg-green-300 font-semibold" id="reset">play again</button></div></div>
 
 
     <script>
@@ -43,7 +47,7 @@
 let reset = document.querySelector('#reset');
 let turnO = true;
 let result = document.querySelector('#result');
-
+let winnerFound = false; 
 // Function to disable all boxes
 function disable() {
   for (let box of boxes) {
@@ -72,16 +76,33 @@ for (let box of boxes) {
       if (turnO) {
         box.innerText = "O";
         turnO = false;
-      } else {
-        box.innerText = "X";
-        turnO = true;
-      }
+      if(turnO==false){
+        checkwin();
+        if(winnerFound) {
+          sound.pause();
+          return;}
+        setTimeout(() => {
+if(!winnerFound && !checkDraw()){
+ checkwin();
+let emptyboxes=[];
+for(let i=0;i<9;i++){
+  if(boxes[i].innerText===''){emptyboxes.push(i)}
+}
+   // Pick a random empty spot
+   let randomIndex = Math.floor(Math.random() * emptyboxes.length);
+  boxes[emptyboxes[randomIndex]].innerText='X';
+  let sound = new Audio('click.wav');
+  sound.play();
+  turnO = true;
+  checkwin();
+}}, 500);
+      }}
 
       // Disable the box after a move
       box.disabled = true;
-
-      // Winner-checking logic
-      let winningpattern = [
+      
+      function checkwin(){
+        let winningpattern = [
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
@@ -92,7 +113,7 @@ for (let box of boxes) {
         [2, 4, 6],
       ];
 
-      let winnerFound = false; // Check if the winner is found
+      // Check if the winner is found
 
       for (let pattern of winningpattern) {
         let pos1 = boxes[pattern[0]].innerText;
@@ -103,12 +124,15 @@ for (let box of boxes) {
           result.innerText = `CONGRATULATIONS! WINNER IS: ${pos1}`;
           let win = new Audio('win.wav');
           winnerFound = true;
-          win.play();
           sound.pause();
+          win.play();
           disable(); // Disable all boxes after winner is detected
           return; // Stop further execution
         }
       }
+      }
+      // Winner-checking logic
+      
 
       // Check for a draw if no winner is found
       if (!winnerFound && checkDraw()) {
@@ -129,7 +153,10 @@ reset.addEventListener("click", () => {
   }
   result.innerText = ''; // Clear the result message
   turnO = true; // Reset turn
+  winnerFound=false;
 });
+
+
 
     </script>
 </body>
