@@ -1,108 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body class="p-2 sm:p-5 bg-[#6CD4FF]">
-  <!-- <div class="flex flex-col h-screen justify-between"> -->
-    <h1 class="text-center font-bold text-3xl font-mono sm:text-4xl">Tic Tac Toe</h1>
-
-    <div class="flex justify-center items-center">
-        <div class="scale-75 grid grid-cols-3 gap-1 sm:gap-2 bg-[#8B80F9] p-2 rounded-sm w-[75%] sm:w-[35%]">
-            <!-- Buttons for the Tic Tac Toe board -->
-             
-            <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-            <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-            <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-            <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-            <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-            <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-            <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-            <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-              <button id="box"
-              class="h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
-              
-            
-        </div>
+  <h1 class="text-center font-bold text-3xl font-mono sm:text-4xl">Tic Tac Toe</h1>
+  <div class="flex justify-center mt-5">
+    <div class="flex justify-around">
+      <button id="plv" class="hover:scale-110 mr-1 transition duration-300 border-2 border-black rounded-md p-1 text-sm bg-purple-500 font-semibold text-white capitalize">
+        player vs player
+      </button>
+      <button id="cpv" class="hover:scale-110 transition duration-300 border-2 border-black rounded-md p-1 text-sm capitalize bg-purple-500 font-semibold text-white ml-1">
+        player vs computer
+      </button>
     </div>
-    <div class="flex justify-center text-base font-semibold capitalize"><p class="font-mono" id="result"></p> </div>
-    <div class="flex justify-center mt-4"><button class="border-[3px] border-black p-1 rounded-md capitalize bg-green-300 font-semibold" id="reset">play again</button></div></div>
+  </div>
 
+  <div class="flex justify-center items-center">
+    <div class="scale-75 grid grid-cols-3 gap-1 sm:gap-2 bg-[#8B80F9] p-2 rounded-sm w-[75%] sm:w-[35%]">
+      <!-- Change id to class so each button is uniquely selectable -->
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+      <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
+    </div>
+  </div>
 
-    <script>
-       let boxes = document.querySelectorAll('#box');
-let reset = document.querySelector('#reset');
-let turnO = true;
-let result = document.querySelector('#result');
-let winnerFound = false; 
-// Function to disable all boxes
-function disable() {
-  for (let box of boxes) {
-    box.disabled = true;
-  }
-}
+  <div class="flex justify-center text-base font-semibold capitalize">
+    <p class="font-mono" id="result"></p>
+  </div>
+  <div class="flex justify-center mt-4">
+    <button class="border-[3px] border-black p-1 rounded-md capitalize bg-green-300 font-semibold" id="reset">
+      play again
+    </button>
+  </div>
 
-// Function to check for a draw
-function checkDraw() {
-  for (let box of boxes) {
-    if (box.innerText === '') {
-      return false; // If any box is empty, it's not a draw 
-    }
-  }
-  return true; // All boxes are filled
-}
+  <script>
+    // Global variables and state
+    const boxes = document.querySelectorAll('.box');
+    const reset = document.querySelector('#reset');
+    const result = document.querySelector('#result');
+    const plvBtn = document.querySelector('#plv');
+    const cpvBtn = document.querySelector('#cpv');
+    let winnerFound = false;
+    let turnO = true; // true means it's O's turn
+    let gameMode = ""; // will be either "plv" or "cpv"
 
-// Turn O and X logic
-for (let box of boxes) {
-  box.addEventListener("click", () => {
-    let sound = new Audio('click.wav');
-    sound.play();
+    // Attach a single event listener to each box
+    boxes.forEach((box) => {
+      box.addEventListener("click", handleBoxClick);
+    });
 
-    // Only allow marking if the box is empty
-    if (box.innerText === "") {
+    // Mode button event listeners
+    plvBtn.addEventListener("click", () => {
+      gameMode = "plv";
+      cpvBtn.style.display = "none";
+      plvBtn.disabled = true;
+      resetGame();
+    });
+
+    cpvBtn.addEventListener("click", () => {
+      gameMode = "cpv";
+      plvBtn.style.display = "none";
+      cpvBtn.disabled = true;
+      resetGame();
+    });
+
+    function handleBoxClick() {
+      // If no game mode is selected or if the game is over, ignore clicks
+      if (!gameMode || winnerFound) {
+        alert('SELECT THE MODE FIRST! ');
+        return;
+      };
+
+      // Play click sound
+      let sound = new Audio('click.wav');
+      sound.play();
+
+      // If the box is already filled, ignore the click
+      if (this.innerText !== "") return;
+
+      // --- Player Move ---
+      // For both modes, player is "O"
       if (turnO) {
-        box.innerText = "O";
+        this.innerText = "O";
         turnO = false;
-      if(turnO==false){
+        this.disabled = true;
         checkwin();
-        if(winnerFound) {
-          sound.pause();
-          return;}
-        setTimeout(() => {
-if(!winnerFound && !checkDraw()){
- checkwin();
-let emptyboxes=[];
-for(let i=0;i<9;i++){
-  if(boxes[i].innerText===''){emptyboxes.push(i)}
-}
-   // Pick a random empty spot
-   let randomIndex = Math.floor(Math.random() * emptyboxes.length);
-  boxes[emptyboxes[randomIndex]].innerText='X';
-  let sound = new Audio('click.wav');
-  sound.play();
-  turnO = true;
-  checkwin();
-}}, 500);
-      }}
+        // --- Computer Move (for cpv mode) ---
+        if (gameMode === "cpv" && !winnerFound && !checkDraw()) {
+          setTimeout(computerMove, 500);
+        }
+      } else {
+        // In plv mode, allow the second player's move manually as "X"
+        if (gameMode === "plv") {
+          this.innerText = "X";
+          turnO = true;
+          this.disabled = true;
+          checkwin();
+        }
+      }
+    }
 
-      // Disable the box after a move
-      box.disabled = true;
-      
-      function checkwin(){
-        let winningpattern = [
+    function computerMove() {
+      if (winnerFound) return;
+      let emptyBoxes = [];
+      boxes.forEach((box, index) => {
+        if (box.innerText === "") emptyBoxes.push(index);
+      });
+      if (emptyBoxes.length > 0) {
+        let randomIndex = Math.floor(Math.random() * emptyBoxes.length);
+        boxes[emptyBoxes[randomIndex]].innerText = "X";
+        boxes[emptyBoxes[randomIndex]].disabled = true;
+        let sound = new Audio('click.wav');
+        sound.play();
+        turnO = true;
+        checkwin();
+      }
+    }
+
+    function checkwin() {
+      let winningPatterns = [
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
@@ -112,53 +138,56 @@ for(let i=0;i<9;i++){
         [0, 4, 8],
         [2, 4, 6],
       ];
-
-      // Check if the winner is found
-
-      for (let pattern of winningpattern) {
+      for (let pattern of winningPatterns) {
         let pos1 = boxes[pattern[0]].innerText;
         let pos2 = boxes[pattern[1]].innerText;
         let pos3 = boxes[pattern[2]].innerText;
-
         if (pos1 !== "" && pos1 === pos2 && pos2 === pos3) {
           result.innerText = `CONGRATULATIONS! WINNER IS: ${pos1}`;
-          let win = new Audio('win.wav');
+          let winSound = new Audio('win.wav');
           winnerFound = true;
-          sound.pause();
-          win.play();
-          disable(); // Disable all boxes after winner is detected
-          return; // Stop further execution
+          winSound.play();
+          disableAll();
+          return;
         }
       }
-      }
-      // Winner-checking logic
-      
-
-      // Check for a draw if no winner is found
       if (!winnerFound && checkDraw()) {
-        result.innerText = " OH NO! THE GAME IS A DRAW!";
-        let lose = new Audio('lose.mp3');
-        lose.play();
-        sound.pause();
+        result.innerText = "OH NO! THE GAME IS A DRAW!";
+        let loseSound = new Audio('lose.mp3');
+        loseSound.play();
       }
     }
-  });
-}
 
-// Reset button logic
-reset.addEventListener("click", () => {
-  for (let box of boxes) {
-    box.disabled = false;
-    box.innerText = '';
-  }
-  result.innerText = ''; // Clear the result message
-  turnO = true; // Reset turn
-  winnerFound=false;
-});
+    function checkDraw() {
+      for (let box of boxes) {
+        if (box.innerText === "") return false;
+      }
+      return true;
+    }
 
+    function disableAll() {
+      boxes.forEach((box) => (box.disabled = true));
+    }
 
+    // Reset button: clear board, reset game state, and allow mode selection again
+    reset.addEventListener("click", () => {
+      resetGame();
+      plvBtn.style.display = "initial";
+      cpvBtn.style.display = "initial";
+      plvBtn.disabled = false;
+      cpvBtn.disabled = false;
+      gameMode = ""; // Clear the mode so user must choose a new mode
+    });
 
-    </script>
+    function resetGame() {
+      boxes.forEach((box) => {
+        box.disabled = false;
+        box.innerText = "";
+      });
+      result.innerText = "";
+      turnO = true;
+      winnerFound = false;
+    }
+  </script>
 </body>
-
 </html>
