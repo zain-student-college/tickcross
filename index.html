@@ -18,8 +18,11 @@
       </button>
     </div>
   </div>
-
-  <div class="flex justify-center items-center mt-5">
+<div class="flex justify-center mt-4">
+  <button id="easymode" class="shadow-md shadow-gray-700 capitalize text-xs border-2 border-black rounded-sm p-[4px] mr-1 text-white bg-blue-500 font-semibold hidden hover:scale-110 transition duration-200">easy mode</button>
+  <button id="hardmode" class="shadow-md shadow-gray-700 text-white bg-red-500 font-semibold ml-1 capitalize text-xs border-2 border-black rounded-sm p-[4px] hidden hover:scale-110 transition duration-200">hard mode</button>
+</div>
+  <div class="flex justify-center items-center mt-0">
     <div class="scale-75 grid grid-cols-3 gap-1 sm:gap-2 bg-purple-600 p-2 rounded-sm w-[75%] sm:w-[35%]">
       <!-- Change id to class so each button is uniquely selectable -->
       <button class="box h-20 sm:h-24 bg-[#CFBFF7] text-5xl font-semibold hover:bg-gray-200 transition-colors"></button>
@@ -45,23 +48,38 @@
 
   <script>
     // Global variables and state
+    let hardmode = document.querySelector('#hardmode');
+    let easymode = document.querySelector('#easymode');
     const boxes = document.querySelectorAll('.box');
     const reset = document.querySelector('#reset');
     const result = document.querySelector('#result');
     const plvBtn = document.querySelector('#plv');
     const cpvBtn = document.querySelector('#cpv');
     let winnerFound = false;
+    let gamesel = "";
     let turnO = true; // true means it's O's turn
     let gameMode = ""; // will be either "plv" or "cpv"
+    let sound = new Audio('click.wav');
 
     // Attach a single event listener to each box
     boxes.forEach((box) => {
       box.addEventListener("click", handleBoxClick);
     });
 
+    easymode.addEventListener('click',()=>{
+      hardmode.style.display = 'none';
+     gamesel= "easy";
+    });
+
+    hardmode.addEventListener('click',()=>{
+      easymode.style.display = 'none';
+     gamesel = "hard";
+    })
+
     // Mode button event listeners
     plvBtn.addEventListener("click", () => {
       gameMode = "plv";
+      gamesel = "plv";
       cpvBtn.style.display = "none";
       plvBtn.disabled = true;
       resetGame();
@@ -70,19 +88,22 @@
     cpvBtn.addEventListener("click", () => {
       gameMode = "cpv";
       plvBtn.style.display = "none";
+      easymode.style.display = "block";
+      hardmode.style.display = "block";
       cpvBtn.disabled = true;
       resetGame();
     });
 
     function handleBoxClick() {
       // If no game mode is selected or if the game is over, ignore clicks
-      if (!gameMode || winnerFound) {
-        alert('SELECT THE MODE FIRST! ');
+      if (!gameMode || winnerFound || !gamesel) {
+        alert('SELECT YOUR GAME MODE FIRST! ');
         return;
       };
-
+      
+      
       // Play click sound
-      let sound = new Audio('click.wav');
+     
       sound.play();
 
       // If the box is already filled, ignore the click
@@ -96,8 +117,11 @@
         this.disabled = true;
         checkwin();
         // --- Computer Move (for cpv mode) ---
-        if (gameMode === "cpv" && !winnerFound && !checkDraw()) {
-          setTimeout(computerMove, 500);
+        if (gameMode === "cpv" &&  gamesel==="easy" && !winnerFound && !checkDraw()) {
+          setTimeout(computerEasy, 500);
+        }
+        if (gameMode === "cpv" &&  gamesel==="hard" && !winnerFound && !checkDraw()) {
+          setTimeout(computerHard, 500);
         }
       } else {
         // In plv mode, allow the second player's move manually as "X"
@@ -110,7 +134,7 @@
       }
     }
 
-    function computerMove() {
+    function computerEasy() {
       if (winnerFound) return;
       let emptyBoxes = [];
       boxes.forEach((box, index) => {
@@ -125,6 +149,128 @@
         turnO = true;
         checkwin();
       }
+    }
+
+    function computerHard(){
+      if (winnerFound) return;
+
+      let winningPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+      for (let pattern of winningPatterns) {
+        let [a, b, c] = pattern;
+        if (boxes[a].innerText === "X" && boxes[b].innerText === "X" && boxes[c].innerText === "") {
+            boxes[c].innerText = "X";
+        let sound = new Audio('click.wav');
+            sound.play();
+            turnO = true;
+            checkDraw();
+            checkwin();
+            return;
+        }
+        if (boxes[a].innerText === "X" && boxes[c].innerText === "X" && boxes[b].innerText === "") {
+            boxes[b].innerText = "X";
+        let sound = new Audio('click.wav');
+            sound.play();
+            turnO = true;
+            checkDraw();
+            checkwin();
+            return;
+        }
+        if (boxes[b].innerText === "X" && boxes[c].innerText === "X" && boxes[a].innerText === "") {
+            boxes[a].innerText = "X";
+        let sound = new Audio('click.wav');
+            sound.play();
+            turnO = true;
+            checkDraw();
+            checkwin();
+            return;
+        }
+    }
+    for (let pattern of winningPatterns) {
+        let [a, b, c] = pattern;
+        if (boxes[a].innerText === "O" && boxes[b].innerText === "O" && boxes[c].innerText === "") {
+            boxes[c].innerText = "X";
+        let sound = new Audio('click.wav');
+            sound.play();
+            turnO = true;
+            checkDraw();
+            checkwin();
+            return;
+        }
+        if (boxes[a].innerText === "O" && boxes[c].innerText === "O" && boxes[b].innerText === "") {
+            boxes[b].innerText = "X";
+        let sound = new Audio('click.wav');
+            sound.play();
+            turnO = true;
+            checkDraw();
+            checkwin();
+            return;
+        }
+        if (boxes[b].innerText === "O" && boxes[c].innerText === "O" && boxes[a].innerText === "") {
+            boxes[a].innerText = "X";
+        let sound = new Audio('click.wav');
+            sound.play();
+            turnO = true;
+            checkwin();
+            checkDraw();
+            return;
+        }
+    }
+     
+    
+       if (boxes[4].innerText===""){
+        boxes[4].innerText="X";
+        turnO = true;
+        let sound = new Audio('click.wav');
+        sound.play();
+        checkwin();
+        checkDraw();
+        return;
+      }
+
+       let one = boxes[0];let two = boxes[2]; let three = boxes[6]; let four = boxes[8];
+       let corners = [one,two,three,four];
+       let emptycells =[];
+
+      if (boxes[0].innerText==="" || boxes[2].innerText==="" ||boxes[6].innerText==="" || boxes[8].innerText===""){
+      for(corner of corners){
+        if(corner.innerText==="") emptycells.push(corner);
+      };
+      let randomnumber = Math.floor(Math.random() * emptycells.length);
+        emptycells[randomnumber].innerText = "X";
+        emptycells[randomnumber].disabled = true;
+        let sound = new Audio('click.wav');
+        sound.play();
+        turnO = true;
+        checkwin();
+        return;
+      }
+
+      else {
+
+        let emptyBoxes = [];
+      boxes.forEach((box, index) => {
+        if (box.innerText === "") emptyBoxes.push(index);
+      });
+      if (emptyBoxes.length > 0) {
+        let randomIndex = Math.floor(Math.random() * emptyBoxes.length);
+        boxes[emptyBoxes[randomIndex]].innerText = "X";
+        boxes[emptyBoxes[randomIndex]].disabled = true;
+        let sound = new Audio('click.wav');
+        sound.play();
+        turnO = true;
+        checkwin();
+      }
+      
+    }
     }
 
     function checkwin() {
@@ -146,6 +292,7 @@
           result.innerText = `CONGRATULATIONS! WINNER IS: ${pos1}`;
           let winSound = new Audio('win.wav');
           winnerFound = true;
+          sound.pause();
           winSound.play();
           disableAll();
           return;
@@ -154,11 +301,13 @@
       if (!winnerFound && checkDraw()) {
         result.innerText = "OH NO! THE GAME IS A DRAW!";
         let loseSound = new Audio('lose.mp3');
+        sound.pause();
         loseSound.play();
       }
     }
 
     function checkDraw() {
+      // sound.pause();
       for (let box of boxes) {
         if (box.innerText === "") return false;
       }
@@ -174,9 +323,12 @@
       resetGame();
       plvBtn.style.display = "initial";
       cpvBtn.style.display = "initial";
+      easymode.style.display = "none";
+      hardmode.style.display = "none";
       plvBtn.disabled = false;
       cpvBtn.disabled = false;
       gameMode = ""; // Clear the mode so user must choose a new mode
+      gamesel ="";
     });
 
     function resetGame() {
