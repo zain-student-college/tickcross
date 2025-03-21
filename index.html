@@ -236,42 +236,43 @@
         return;
       }
 
-       let one = boxes[0];let two = boxes[2]; let three = boxes[6]; let four = boxes[8];
-       let corners = [one,two,three,four];
-       let emptycells =[];
+ // Check if two corners are "O" and take an edge
+ let corners = [boxes[0], boxes[2], boxes[6], boxes[8]];
+  let oCorners = corners.filter(corner => corner.innerText === "O");
 
-      if (boxes[0].innerText==="" || boxes[2].innerText==="" ||boxes[6].innerText==="" || boxes[8].innerText===""){
-      for(corner of corners){
-        if(corner.innerText==="") emptycells.push(corner);
-      };
-      let randomnumber = Math.floor(Math.random() * emptycells.length);
-        emptycells[randomnumber].innerText = "X";
-        emptycells[randomnumber].disabled = true;
-        let sound = new Audio('click.wav');
-        sound.play();
-        turnO = true;
-        checkwin();
-        return;
-      }
+  if (oCorners.length >= 2) {
+    Choseedge();
+    return;
+  }
 
-      else {
+  // Take a random corner if available
+  let emptyCorners = corners.filter(corner => corner.innerText === "");
+  if (emptyCorners.length > 0) {
+    let randomCorner = emptyCorners[Math.floor(Math.random() * emptyCorners.length)];
+    randomCorner.innerText = "X";
+    sound.play();
+    turnO = true;
+    checkwin();
+    return;
+  }
 
-        let emptyBoxes = [];
-      boxes.forEach((box, index) => {
-        if (box.innerText === "") emptyBoxes.push(index);
-      });
-      if (emptyBoxes.length > 0) {
-        let randomIndex = Math.floor(Math.random() * emptyBoxes.length);
-        boxes[emptyBoxes[randomIndex]].innerText = "X";
-        boxes[emptyBoxes[randomIndex]].disabled = true;
-        let sound = new Audio('click.wav');
-        sound.play();
-        turnO = true;
-        checkwin();
-      }
-      
-    }
-    }
+  // If no corners are available, take a random edge
+  Choseedge();
+}
+
+function Choseedge() {
+  let edges = [boxes[1], boxes[3], boxes[5], boxes[7]];
+  let emptyEdges = edges.filter(edge => edge.innerText === "");
+
+  if (emptyEdges.length > 0) {
+    let randomEdge = emptyEdges[Math.floor(Math.random() * emptyEdges.length)];
+    randomEdge.innerText = "X";
+    sound.play();
+    turnO = true;
+    checkwin();
+  }
+}
+
 
     function checkwin() {
       let winningPatterns = [
